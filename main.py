@@ -62,10 +62,11 @@ def calculate_risk(categories, recent_activities=None):
         "Other":1
 
     }
-
+#For each category of activity, take its weight (importance) and multiply by a scaled version of how many times the user did that activity. Then add up all categories to get a single “base risk” number.
     base_risk = sum(weights.get(cat, 1) * math.log(1 + count)
                     for cat, count in categories.items())
     
+ #This code calculates extra risk from recent activity, giving more weight to activities done recently. Then it adds this to the base category risk and converts the total into a percentage between 0 and 100 that represents the user’s overall data exposure.
     recent_risk = 0
     if recent_activities:
         now = datetime.now()
@@ -77,4 +78,46 @@ def calculate_risk(categories, recent_activities=None):
 
     total_risk = base_risk + recent_risk
     risk_percent = int(max(0, min(100, (total_risk / 15.0) * 100)))
+
+    if total_risk <= 3:
+        return (
+            "Low",
+            "green",
+            "Low tracking detected.",
+            [
+                "Review settings in your mobile.",
+                "Use incognito for sensitive searches.",
+                "Clear browsing history periodically."
+            ],
+            risk_percent
+        )
+    elif total_risk <= 10:
+        return (
+            "Medium",
+            "#ffcc00",
+            "Moderate tracking detected.",
+
+        [
+            "Turn off Location History.",
+            "Revoke unused third-party app permissions.",
+            "Use a privacy-focused browser (Brave/Firefox)."
+            ],
+            risk_percent
+        
+        )
+    else:
+        return (
+            "High",
+            "red",
+            "Heavy tracking detected recently.",
+
+             [
+                "Pause Web & App Activity.",
+                "Delete recent activity from My Activity.",
+                "Consider a VPN and disable ad personalization."
+            ],
+            risk_percent
+        
+        )
+        
     
