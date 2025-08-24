@@ -120,4 +120,14 @@ def calculate_risk(categories, recent_activities=None):
         
         )
         
+def get_risk_comment(risk_score):
+    if risk_score <= 25:
+        return "👻 You're almost invisible… or are you? 🤨"
+    elif risk_score <= 50:
+        return "🍕📺 Google knows your fav snacks & late-night YouTube."
+    elif risk_score <= 75:
+        return "😐 Bro… Google knows you better than your mom."
+    else:
+        return "😱 Damn! Your whole life is recorded by Google 😭"
+
     
