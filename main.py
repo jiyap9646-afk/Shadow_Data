@@ -40,3 +40,13 @@ def parse_datetime(text: str):
         except Exception:
             pass
     return None
+
+def clean_text(s: str) -> str:
+    if not s:
+        return ""
+    s = re.sub(r"<[^>]+>", " ", s)         
+    s = re.sub(r"https?://\S+", " ", s)    
+    s = re.sub(r"www\.\S+", " ", s)
+    s = re.sub(r"[^A-Za-z0-9\s]", " ", s)   
+    s = re.sub(r"\s+", " ", s).strip()
+    return s.lower()
