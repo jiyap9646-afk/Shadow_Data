@@ -169,8 +169,7 @@ def analyze_html_takeout(filepath: str):
         categories["Other"] = 1
 
 
-    # Attempt to scrape timestamps from common spots
-    # (span/div with title/time or text matching 'January 1, 2025 at 10:30')
+    
     time_like = []
     for t in soup.select("time"):
         if t.get("datetime"):
@@ -179,7 +178,7 @@ def analyze_html_takeout(filepath: str):
             time_like.append(t.text)
 
 
-    # A looser regex pull from the text for 'Month dd, yyyy at hh:mm'
+   
     time_like += re.findall(r"[A-Z][a-z]+ \d{1,2}, \d{4} (?:at |, )\d{1,2}:\d{2}(?: [AP]M)?", soup.get_text(" "))
 
 
@@ -187,6 +186,40 @@ def analyze_html_takeout(filepath: str):
         dt = parse_datetime(raw)
         if dt:
             times.append(dt)
+
+
+    return categories, times
+
+def analyze_plain_text(filepath: str):
+    
+    categories = {"Search": 0, "YouTube": 0, "Maps": 0, "Shopping": 0, "Discover": 0, "Other": 0}
+    times = []
+
+
+    with open(filepath, "r", encoding="utf-8", errors="ignore") as f:
+        txt = clean_text(f.read())
+
+
+    if not txt.strip():
+        categories["Other"] = 1
+        return categories, times
+
+
+    
+    buckets = {
+        "Search": [r"\bsearch\b", r"\bgoogle search\b", r"\bquery\b"],
+        "YouTube": [r"\byoutube\b", r"\bwatch\b", r"\bvideo\b"],
+        "Maps": [r"\bmaps\b", r"\bnavigate\b", r"\bdirection\b", r"\bplace\b"],
+        "Shopping": [r"\bshopping\b", r"\bproduct\b", r"\bbuy\b", r"\border\b"],
+        "Discover": [r"\bdiscover\b", r"\brecommended\b", r"\bfor you\b"]
+    }
+    for cat, patterns in buckets.items():
+        for p in patterns:
+            categories[cat] += len(re.findall(p, txt))
+
+
+    if sum(categories.values()) == 0:
+        categories["Other"] = 1
 
 
     return categories, times
