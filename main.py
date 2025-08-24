@@ -224,6 +224,17 @@ def analyze_plain_text(filepath: str):
 
     return categories, times
 
+def analyze_file(filepath: str):
+    """
+    Router: decide which analyzer based on extension/content.
+    """
+    ext = os.path.splitext(filepath)[1].lower()
+    if ext in (".html", ".htm"):
+        return analyze_html_takeout(filepath)
+    else:
+        return analyze_plain_text(filepath)
+
+
 
 
 
