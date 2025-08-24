@@ -225,14 +225,105 @@ def analyze_plain_text(filepath: str):
     return categories, times
 
 def analyze_file(filepath: str):
-    """
-    Router: decide which analyzer based on extension/content.
-    """
+   
     ext = os.path.splitext(filepath)[1].lower()
     if ext in (".html", ".htm"):
         return analyze_html_takeout(filepath)
     else:
         return analyze_plain_text(filepath)
+
+@app.route("/", methods=["GET"])
+def index():
+    return render_template("index.html")
+
+@app.route("/upload", methods=["POST"])
+def upload_file():
+    try:
+        # Check if file part exists
+        if "file" not in request.files:
+            return "No file part", 400
+
+
+        file = request.files["file"]
+
+
+        # Check if filename is empty
+        if not file.filename:
+            return "No selected file", 400
+
+
+        # Assert filename is not None for Pylance
+        assert file.filename is not None
+        filename: str = file.filename
+
+
+        # Ensure upload folder exists
+        upload_folder: Path = Path(app.config["UPLOAD_FOLDER"])
+        upload_folder.mkdir(exist_ok=True)
+
+
+        # Full path for saving file
+        filepath: Path = upload_folder / filename
+
+
+        # Save the uploaded file
+        file.save(filepath)
+        # --- Analyze uploaded file ---
+        categories, activity_times = analyze_file(str(filepath))
+
+
+        # --- Risk Meter, Comments, Personality ---
+        risk_level, risk_color, risk_message, risk_suggestions, risk_percent = calculate_risk(
+            categories, recent_activities=activity_times
+        )
+        risk_comment = get_risk_comment(risk_percent)
+        personality = get_personality_type(risk_percent)
+
+         # --- Pie Chart ---
+        filtered = {k: v for k, v in categories.items() if v > 0}
+        if not filtered:
+            filtered = {"Other": 1}
+
+
+        plt.figure(figsize=(6, 6))
+        plt.pie(list(filtered.values()),
+                labels=list(filtered.keys()),
+                autopct='%1.1f%%',
+                startangle=90)
+        plt.title('Activity Breakdown')
+        chart_name = 'activity_chart.png'
+        plt.savefig(os.path.join(STATIC_FOLDER, chart_name), bbox_inches="tight")
+        plt.close()
+
+
+        # --- Render template with results ---
+     
+        return render_template(
+        "index.html",
+        filename=filename,
+        categories=categories,
+        chart_url=chart_name,
+        risk_level=risk_level,
+        risk_color=risk_color,
+        suggestion=risk_message,
+        risk_suggestions=risk_suggestions,
+        risk_percent=risk_percent,
+        risk_comment=risk_comment,
+        personality=personality
+    )
+
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return f"Internal Server Error: {e}"
+
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=3000, debug=True)
+
+
+
 
 
 
