@@ -129,5 +129,17 @@ def get_risk_comment(risk_score):
         return "😐 Bro… Google knows you better than your mom."
     else:
         return "😱 Damn! Your whole life is recorded by Google 😭"
+    
+def get_personality_type(risk_score):
+    if risk_score <= 25:
+        return "🕵️‍♂️ The Ghost — you leave almost no trace."
+    elif risk_score <= 50:
+        return "🙂 The Casual User — you share enough, not too much."
+    elif risk_score <= 75:
+        return "📲 The Over-Sharer — constant life updates to Google."
+    else:
+        return "📖 The Transparent Soul — Google has your biography."
+
+
 
     
