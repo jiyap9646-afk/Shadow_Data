@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Shadow Data</title>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+
+  <style>
+    :root{
+      --accent: #00ccff; /* neon cyan/blue */
+      --accent-dark: rgba(0, 60, 90, 0.85); /* darker background-blue for panels */
+      --accent-glow: rgba(0, 204, 255, 0.35);
+      --accent-glow-strong: rgba(0, 204, 255, 0.65);
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: url("Network-Apps_on_Galaxy_Store.jpg") no-repeat center center fixed;
+      background-size: cover;
+      color: white;
+      margin: 0;
+      text-align: center;
+    }
+
+    /* Shared floating style */
+    .hero,
+    .upload-box,
+    .steps,
+    .results {
+      background: var(--accent-dark); /* blue-ish background */
+      border: 2px solid var(--accent);
+      border-radius: 12px;
+      box-shadow: 0 0 18px var(--accent-glow);
+      color: white;
+    }
+
+    /* Floating Header Box */
+    .hero {
+      display: inline-block;
+      margin: 40px auto 30px auto;
+      padding: 30px 50px;
+      border-radius: 15px;
+      animation: floatBox 3s ease-in-out infinite alternate;
+    }
+    @keyframes floatBox {
+      from { transform: translateY(0); }
+      to { transform: translateY(-10px); }
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-size: 4rem;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 900;
+      color: #ffffff;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      font-family: 'Share Tech Mono', monospace;
+      margin-top: 12px;
+    }
+
+    /* Upload Box */
+    .upload-box {
+      margin: 40px auto;
+      padding: 25px;
+      width: 320px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+    }
+    .upload-box:hover {
+      transform: scale(1.07);
+      box-shadow: 0 0 25px var(--accent-glow-strong), 0 0 60px var(--accent-glow-strong);
+    }
+    .upload-box h2 {
+      margin: 0 0 15px 0;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 700;
+      color: #ffffff;
+      text-shadow: 0 0 8px var(--accent), 0 0 20px var(--accent);
+    }
+
+    /* Steps Box */
+    .steps {
+      padding: 20px;
+      margin: 20px auto;
+      width: 360px;
+      text-align: left;
+      border-left: 4px solid var(--accent);
+      box-shadow: 0 0 12px var(--accent-glow);
+    }
+    .steps h3 {
+      color: #ffffff;
+      text-shadow: 0 0 8px var(--accent), 0 0 20px var(--accent);
+      margin: 0 0 8px 0;
+      font-family: 'Orbitron', sans-serif;
+    }
+
+    /* Results Box */
+    .results {
+      margin: 20px auto;
+      padding: 25px;
+      width: 360px;
+      box-shadow: 0 0 15px var(--accent-glow), 0 0 40px var(--accent-glow);
+    }
+    .results h3 {
+      color: #ffffff;
+      text-shadow: 0 0 10px var(--accent), 0 0 25px var(--accent);
+      margin-top: 0;
+      font-family: 'Orbitron', sans-serif;
+    }
+    .risk {
+      color: #ffffff;
+      font-weight: bold;
+      font-size: 1.3rem;
+      text-shadow:
+        0 0 8px var(--accent),
+        0 0 20px var(--accent),
+        0 0 40px var(--accent);
+      animation: glow-pulse 1.5s infinite alternate;
+    }
+    @keyframes glow-pulse {
+      from {
+        text-shadow:
+          0 0 8px var(--accent),
+          0 0 20px var(--accent),
+          0 0 40px var(--accent);
+      }
+      to {
+        text-shadow:
+          0 0 15px var(--accent),
+          0 0 30px var(--accent),
+          0 0 60px var(--accent);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="hero">
+    <h1>Shadow Data</h1>
+    <p>Find out what Google really knows</p>
+  </div>
+
+  <div class="upload-box">
+    <h2>Upload File</h2>
+    <input type="file" id="file"><br>
+    <span id="fileName">No file chosen</span>
+  </div>
+
+  <div class="steps">
+    <h3>Steps to Export</h3>
+    <ol>
+      <li>Go to Google Takeout</li>
+      <li>Select data categories</li>
+      <li>Download .zip file</li>
+      <li>Upload here</li>
+    </ol>
+  </div>
+
+  <div class="results">
+    <h3>Results</h3>
+    <p class="risk">⚠️ Risk Level: High (78%)</p>
+    <p>Category: Location History</p>
+  </div>
+
+  <script>
+    const input = document.getElementById("file");
+    const fileName = document.getElementById("fileName");
+
+    input.addEventListener("change", () => {
+      fileName.textContent = input.files.length > 0 ? input.files[0].name : "No file chosen";
+    });
+  </script>
+
+</body>
+</html>

@@ -4,62 +4,92 @@
   <meta charset="UTF-8">
   <title>Shadow Data</title>
   <style>
-    body {
-      font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-      background: #111827;
-      color: #f1f1f1;
+    body
+     {
+      font-family: Arial, sans-serif;
+      background: #101820;
+      color: white;
       margin: 0;
       text-align: center;
-      padding: 20px;
     }
-    header {
-      padding: 40px 0;
-      background: #1f2937;
+    .hero {
+      background: #1a2735;
+      padding: 40px;
     }
-    header h1 {
+    .hero h1 {
       margin: 0;
       font-size: 2.5rem;
     }
-    header p {
-      margin: 10px 0 0;
-      font-size: 1.2rem;
-      color: #9ca3af;
+    .upload-box {
+      margin: 30px auto;
+      padding: 20px;
+      width: 300px;
+      border: 2px dashed #555;
+    }
+    .upload-box input {
+      margin-top: 10px;
     }
     .steps {
-      margin: 40px auto;
-      width: 350px;
-      background: #1e293b;
+      background: #18222e;
       padding: 20px;
+      margin: 20px auto;
+      width: 350px;
       text-align: left;
-      border-radius: 6px;
     }
-    .steps h2 {
-      text-align: center;
+    .results {
+      background: #222c38;
+      margin: 20px auto;
+      padding: 20px;
+      width: 350px;
     }
-    ol {
-      padding-left: 20px;
-    }
-    ol li {
-      margin: 10px 0;
+    .risk {
+      color: #ff6b6b;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
 
-  <header>
-   <pre> <h1>Shadow Data</h1></pre>
-    <p>Uncover what’s hidden in your Google account</p>
-  </header>
+  <div class="hero">
+    <h1>Shadow Data</h1>
+    <p>Find out what Google really knows</p>
+  </div>
+
+  <div class="upload-box">
+    <h2>Upload File</h2>
+    <input type="file" id="file"><br>
+    <span id="fileName">No file chosen</span>
+  </div>
 
   <div class="steps">
-    <h2>How It Works</h2>
+    <h3>Steps to Export</h3>
     <ol>
       <li>Go to Google Takeout</li>
-      <li>Select your data categories</li>
-      <li>Download the .zip file</li>
-      <li>Upload here to analyze</li>
+      <li>Select data categories</li>
+      <li>Download .zip file</li>
+      <li>Upload here</li>
     </ol>
   </div>
+
+  <div class="results">
+    <h3>Results</h3>
+    <p class="risk">⚠️ Risk Level: High (78%)</p>
+    <p>Category: Location History</p>
+  </div>
+
+  <script>
+    // show chosen filename
+    const input = document.getElementById("file");
+    const fileName = document.getElementById("fileName");
+
+    input.addEventListener("change", () => {
+      if(input.files.length > 0){
+        fileName.textContent = input.files[0].name;
+      } else {
+        fileName.textContent = "No file chosen";
+      }
+    });
+  </script>
 
 </body>
 </html>

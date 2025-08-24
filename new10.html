@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Shadow Data</title>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: url("Network-Apps_on_Galaxy_Store.jpg") no-repeat center center fixed;
+      background-size: cover;
+      color: white;
+      margin: 0;
+      text-align: center;
+    }
+
+    /* Floating Header Box */
+    .hero {
+      display: inline-block;
+      margin: 40px auto 30px auto;
+      padding: 30px 50px;
+      background: rgba(0, 0, 0, 0.9);
+      border: 2px solid #0044ff; /* Plain blue border */
+      border-radius: 15px;
+      box-shadow: 0 0 20px #0044ff55;
+      animation: floatBox 3s ease-in-out infinite alternate;
+    }
+    @keyframes floatBox {
+      from { transform: translateY(0); }
+      to { transform: translateY(-10px); }
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-size: 4rem;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 900;
+      color: #ffffff; /* White */
+      letter-spacing: 5px;
+      text-transform: uppercase;
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      font-family: 'Share Tech Mono', monospace;
+      color: #ffffff; /* Plain white text */
+      margin-top: 12px;
+      text-shadow: none; /* No glow */
+    }
+
+    /* Upload Box */
+    .upload-box {
+      margin: 40px auto;
+      padding: 25px;
+      width: 320px;
+      border: 2px solid #00eaff;
+      border-radius: 12px;
+      background: #000;
+      box-shadow: 0 0 15px #00eaff, 0 0 40px #00eaff55;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+    }
+    .upload-box:hover {
+      transform: scale(1.07);
+      box-shadow: 0 0 25px #00eaff, 0 0 60px #00eaffaa;
+    }
+    .upload-box h2 {
+      margin: 0 0 15px 0;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 700;
+      color: #00eaff;
+      text-shadow: 0 0 8px #00eaff, 0 0 20px #00eaff;
+    }
+
+    /* Steps Box */
+    .steps {
+      background: #000;
+      padding: 20px;
+      margin: 20px auto;
+      width: 360px;
+      text-align: left;
+      border-left: 4px solid #00eaff;
+      border-radius: 6px;
+      box-shadow: 0 0 12px #00eaff88;
+      color: #ccf5ff;
+    }
+    .steps h3 {
+      color: #00eaff;
+      text-shadow: 0 0 8px #00eaff, 0 0 20px #00eaff;
+    }
+
+    /* Results Box */
+    .results {
+      background: #1a0000;
+      margin: 20px auto;
+      padding: 25px;
+      width: 360px;
+      border-radius: 8px;
+      box-shadow: 0 0 15px #ff0000, 0 0 40px #ff000088;
+      border: 2px solid #ff0000;
+    }
+    .results h3 {
+      color: #ff3333;
+      text-shadow: 0 0 10px #ff0000, 0 0 25px #ff0000;
+    }
+    .risk {
+      color: #ff4444;
+      font-weight: bold;
+      font-size: 1.3rem;
+      text-shadow: 
+        0 0 8px #ff0000,
+        0 0 20px #ff0000,
+        0 0 40px #ff0000;
+      animation: warning-glow 1.5s infinite alternate;
+    }
+    @keyframes warning-glow {
+      from {
+        text-shadow: 
+          0 0 8px #ff0000,
+          0 0 20px #ff0000,
+          0 0 40px #ff0000;
+      }
+      to {
+        text-shadow: 
+          0 0 15px #ff3333,
+          0 0 30px #ff3333,
+          0 0 60px #ff3333;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="hero">
+    <h1>Shadow Data</h1>
+    <p>Find out what Google really knows</p>
+  </div>
+
+  <div class="upload-box">
+    <h2>Upload File</h2>
+    <input type="file" id="file"><br>
+    <span id="fileName">No file chosen</span>
+  </div>
+
+  <div class="steps">
+    <h3>Steps to Export</h3>
+    <ol>
+      <li>Go to Google Takeout</li>
+      <li>Select data categories</li>
+      <li>Download .zip file</li>
+      <li>Upload here</li>
+    </ol>
+  </div>
+
+  <div class="results">
+    <h3>Results</h3>
+    <p class="risk">⚠️ Risk Level: High (78%)</p>
+    <p>Category: Location History</p>
+  </div>
+
+  <script>
+    const input = document.getElementById("file");
+    const fileName = document.getElementById("fileName");
+
+    input.addEventListener("change", () => {
+      if(input.files.length > 0){
+        fileName.textContent = input.files[0].name;
+      } else {
+        fileName.textContent = "No file chosen";
+      }
+    });
+  </script>
+
+</body>
+</html>
