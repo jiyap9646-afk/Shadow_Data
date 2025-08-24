@@ -50,3 +50,31 @@ def clean_text(s: str) -> str:
     s = re.sub(r"[^A-Za-z0-9\s]", " ", s)   
     s = re.sub(r"\s+", " ", s).strip()
     return s.lower()
+
+def calculate_risk(categories, recent_activities=None):
+
+    weights ={
+        "Search":1,
+        "Youtube":2,
+        "Maps":3,
+        "Shopping":2,
+        "Discover":2,
+        "Other":1
+
+    }
+
+    base_risk = sum(weights.get(cat, 1) * math.log(1 + count)
+                    for cat, count in categories.items())
+    
+    recent_risk = 0
+    if recent_activities:
+        now = datetime.now()
+        for t in recent_activities:
+            if isinstance(t, datetime):
+                days_ago = (now - t).days
+                recent_risk += math.exp(-days_ago / 7)
+
+
+    total_risk = base_risk + recent_risk
+    risk_percent = int(max(0, min(100, (total_risk / 15.0) * 100)))
+    
