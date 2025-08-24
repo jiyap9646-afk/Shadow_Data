@@ -1,3 +1,3 @@
-flask == 3.0.3
-beautifulsoup == 4.12.3
-matplotlib == 3.9.0
+Flask==3.0.3
+beautifulsoup4==4.12.3
+matplotlib==3.9.0
