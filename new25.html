@@ -3,32 +3,57 @@
 <head>
   <meta charset="UTF-8" />
   <title>Shadow Data</title>
+
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
 
   <style>
-    :root{
-      --accent: #00ccff; /* neon cyan/blue */
-      --accent-dark: rgba(0, 60, 90, 0.85); /* darker background-blue for panels */
-      --accent-glow: rgba(0, 204, 255, 0.35);
-      --accent-glow-strong: rgba(0, 204, 255, 0.65);
+    :root {
+      --accent: #a020f0; /* Purple accent */
+      --accent-dark: rgba(80, 0, 120, 0.65);
+      --accent-glow: rgba(160, 32, 240, 0.35);
+      --accent-glow-strong: rgba(160, 32, 240, 0.65);
+
+      --blue: #00cfff; /* Neon blue */
+      --blue-dark: #0066ff;
+      --blue-glow: rgba(0, 207, 255, 0.6);
+      --blue-glow-strong: rgba(0, 207, 255, 1);
     }
 
     body {
       font-family: Arial, sans-serif;
-      background: #ffffff; /* White background for the whole page */
-      color: #000;
       margin: 0;
       text-align: center;
+
+      /* ✅ Full page neon background */
+      background: url("Neon Threads.jpg") no-repeat center center fixed;
+      background-size: cover;
+      color: #fff;
     }
 
-    /* Hero Section */
+    /* Dark overlay + blur for readability */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.45);
+      z-index: -1;
+    }
+
+    /* HERO */
     .hero {
-      background: url("Network-Apps_on_Galaxy_Store.jpg") no-repeat center center;
-      background-size: cover;
-      margin: 0;
-      padding: 60px 20px;
-      color: white;
+      position: relative;
+      height: 300px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+    }
+
+    .hero h1,
+    .hero p {
+      position: relative;
+      z-index: 1;
     }
 
     .hero h1 {
@@ -36,31 +61,39 @@
       font-size: 4rem;
       font-family: 'Orbitron', sans-serif;
       font-weight: 900;
-      color: #ffffff;
       letter-spacing: 5px;
       text-transform: uppercase;
-      text-shadow: 0 0 15px var(--accent), 0 0 35px var(--accent);
+
+      /* Same gradient as upload button */
+      background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+
+      /* Softer polished glow */
+      text-shadow: 0 0 4px var(--blue-glow), 0 0 12px rgba(0, 207, 255, 0.1);
     }
 
     .hero p {
       font-size: 1.2rem;
       font-family: 'Share Tech Mono', monospace;
       margin-top: 12px;
-      text-shadow: 0 0 6px var(--accent);
+      text-shadow: 0 0 10px rgba(0,0,0,0.6);
     }
 
     /* Upload Box */
     .upload-box {
-      margin: 40px auto;
-      padding: 25px;
-      width: 360px;
       background: var(--accent-dark);
       border: 2px solid var(--accent);
       border-radius: 12px;
       box-shadow: 0 0 18px var(--accent-glow);
-      color: white;
+      margin: 40px auto;
+      padding: 25px;
+      width: 360px;
       text-align: center;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
+      color: white;
+      backdrop-filter: blur(6px);
     }
 
     .upload-box:hover {
@@ -72,57 +105,60 @@
       margin: 0 0 18px 0;
       font-family: 'Orbitron', sans-serif;
       font-weight: 700;
-      color: #ffffff;
-      text-shadow: 0 0 8px var(--accent), 0 0 20px var(--accent);
+      font-size: 1.6rem;
+      color: #fff;
+      text-shadow: 0 0 12px var(--accent-glow), 0 0 24px var(--accent-glow-strong);
     }
 
     .upload-btn {
       display: inline-block;
-      padding: 10px 20px;
-      border: 2px solid var(--accent);
-      border-radius: 8px;
-      background: transparent;
-      color: #ffffff;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+      color: #fff;
       font-family: 'Orbitron', sans-serif;
       font-size: 1rem;
       cursor: pointer;
       transition: all 0.3s ease;
-      text-shadow: 0 0 6px var(--accent);
+      text-shadow: 0 0 6px rgba(0,0,0,0.5);
+      box-shadow: 0 0 18px var(--blue-glow);
     }
 
     .upload-btn:hover {
-      background: var(--accent);
-      color: #000;
-      box-shadow: 0 0 20px var(--accent-glow-strong);
+      background: linear-gradient(135deg, #33ddff, #0099ff);
+      box-shadow: 0 0 25px var(--blue-glow-strong), 0 0 60px var(--blue-glow-strong);
+      transform: scale(1.05);
     }
 
     .file-name {
       margin-top: 12px;
       font-size: 0.9rem;
-      color: #ccf5ff;
+      color: #f0d9ff;
       font-family: 'Share Tech Mono', monospace;
     }
 
     /* Steps Box */
     .steps {
       background: var(--accent-dark);
+      border: 2px solid var(--accent);
+      border-radius: 12px;
+      box-shadow: 0 0 18px var(--accent-glow);
       padding: 25px;
       margin: 30px auto;
       width: 420px;
-      border: 2px solid var(--accent);
-      border-radius: 12px;
-      box-shadow: 0 0 15px var(--accent-glow);
       text-align: left;
-      color: #ffffff;
+      color: white;
+      backdrop-filter: blur(6px);
     }
 
     .steps h3 {
-      color: #ffffff;
-      text-shadow: 0 0 10px var(--accent), 0 0 25px var(--accent);
       margin: 0 0 20px 0;
       font-family: 'Orbitron', sans-serif;
       text-align: center;
       font-size: 1.6rem;
+      color: #fff;
+      text-shadow: 0 0 12px var(--accent-glow), 0 0 24px var(--accent-glow-strong);
     }
 
     .steps ol {
@@ -136,10 +172,10 @@
       align-items: center;
       margin-bottom: 18px;
       padding-bottom: 12px;
-      border-bottom: 1px solid rgba(0, 204, 255, 0.2);
+      border-bottom: 1px solid rgba(160, 32, 240, 0.2);
       transition: transform 0.3s ease, box-shadow 0.3s ease;
       font-family: 'Share Tech Mono', monospace;
-      color: #ccf5ff;
+      color: #f0d9ff;
     }
 
     .steps li:last-child {
@@ -158,14 +194,14 @@
       width: 34px;
       height: 34px;
       border-radius: 50%;
-      background: var(--accent);
-      color: #000;
+      background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+      color: #fff;
       display: flex;
       align-items: center;
       justify-content: center;
       font-weight: bold;
       margin-right: 14px;
-      box-shadow: 0 0 14px var(--accent-glow-strong);
+      box-shadow: 0 0 14px var(--blue-glow-strong);
     }
 
     .steps li span {
@@ -175,12 +211,15 @@
   </style>
 </head>
 <body>
-
+  <!-- HERO -->
   <div class="hero">
-    <h1>Shadow Data</h1>
-    <p>Find out what Google really knows</p>
+    <div>
+      <h1>Shadow Data</h1>
+      <p>Find out what Google really knows</p>
+    </div>
   </div>
 
+  <!-- UPLOAD BOX -->
   <div class="upload-box">
     <h2>Upload Your Data</h2>
     <label for="file" class="upload-btn">Choose File</label>
@@ -188,6 +227,7 @@
     <p id="fileName" class="file-name">No file chosen</p>
   </div>
 
+  <!-- STEPS BOX -->
   <div class="steps">
     <h3>How to Export from Google</h3>
     <ol>
@@ -201,10 +241,10 @@
   <script>
     const input = document.getElementById("file");
     const fileName = document.getElementById("fileName");
+
     input.addEventListener("change", () => {
       fileName.textContent = input.files.length > 0 ? input.files[0].name : "No file chosen";
     });
   </script>
-
 </body>
 </html>

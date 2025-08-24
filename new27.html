@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Shadow Data</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --accent: #a020f0;
+      --accent-dark: rgba(80, 0, 120, 0.65);
+      --accent-glow: rgba(160, 32, 240, 0.35);
+      --accent-glow-strong: rgba(160, 32, 240, 0.65);
+      --blue: #00cfff;
+      --blue-dark: #0066ff;
+      --blue-glow: rgba(0, 207, 255, 0.6);
+      --blue-glow-strong: rgba(0, 207, 255, 1);
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      text-align: center;
+      background: url("Neon Threads.jpg") no-repeat center center fixed;
+      background-size: cover;
+      color: #fff;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.45);
+      z-index: -1;
+    }
+
+    /* HERO */
+    .hero { height: 300px; display: flex; align-items: center; justify-content: center; }
+    .hero h1 { font-size: 4rem; font-family: 'Orbitron', sans-serif; font-weight: 900; letter-spacing: 5px; text-transform: uppercase;
+      background: linear-gradient(135deg, var(--blue), var(--blue-dark));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 4px var(--blue-glow), 0 0 12px rgba(0, 207, 255, 0.1);
+    }
+    .hero p { font-size: 1.2rem; font-family: 'Share Tech Mono', monospace; margin-top: 12px; text-shadow: 0 0 10px rgba(0,0,0,0.6); }
+
+    /* Upload Box */
+    .upload-box {
+      background: var(--accent-dark); border: 2px solid var(--accent); border-radius: 12px;
+      box-shadow: 0 0 18px var(--accent-glow);
+      margin: 40px auto; padding: 25px; width: 360px;
+      text-align: center; color: white; backdrop-filter: blur(6px);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .upload-box:hover { transform: scale(1.07); box-shadow: 0 0 25px var(--accent-glow-strong), 0 0 60px var(--accent-glow-strong); }
+    .upload-box h2 { font-family: 'Orbitron', sans-serif; font-size: 1.6rem; margin-bottom: 18px; }
+    .upload-btn { display: inline-block; padding: 12px 24px; border-radius: 10px;
+      background: linear-gradient(135deg, var(--blue), var(--blue-dark)); color: #fff;
+      font-family: 'Orbitron', sans-serif; cursor: pointer; transition: all 0.3s ease;
+      box-shadow: 0 0 18px var(--blue-glow);
+    }
+    .upload-btn:hover { background: linear-gradient(135deg, #33ddff, #0099ff);
+      box-shadow: 0 0 25px var(--blue-glow-strong), 0 0 60px var(--blue-glow-strong); transform: scale(1.05); }
+    .file-name { margin-top: 12px; font-size: 0.9rem; font-family: 'Share Tech Mono', monospace; color: #f0d9ff; }
+
+    /* Steps */
+    .steps {
+      background: var(--accent-dark); border: 2px solid var(--accent);
+      border-radius: 12px; box-shadow: 0 0 18px var(--accent-glow);
+      padding: 25px; margin: 30px auto; width: 420px; backdrop-filter: blur(6px);
+    }
+    .steps h3 { font-family: 'Orbitron', sans-serif; font-size: 1.6rem; margin-bottom: 20px; }
+    .steps li { display: flex; align-items: center; margin-bottom: 18px; padding-bottom: 12px;
+      border-bottom: 1px solid rgba(160, 32, 240, 0.2); font-family: 'Share Tech Mono', monospace; color: #f0d9ff; }
+    .steps li:last-child { border-bottom: none; }
+    .steps li .number { width: 34px; height: 34px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--blue), var(--blue-dark)); display: flex; align-items: center; justify-content: center; margin-right: 14px; }
+
+    /* Risk Meter Section */
+    .risk-section {
+      margin: 50px auto;
+      width: 520px;
+      background: rgba(0,0,0,0.5);
+      border-radius: 15px;
+      padding: 30px;
+      display: none; /* hidden until upload */
+      box-shadow: 0 0 25px var(--accent-glow-strong);
+      backdrop-filter: blur(8px);
+    }
+    .risk-section h2 { font-family: 'Orbitron', sans-serif; font-size: 1.8rem; margin-bottom: 20px; }
+    canvas { max-width: 100%; }
+    .risk-comment { margin-top: 15px; font-size: 1.2rem; font-family: 'Share Tech Mono', monospace; color: #f0d9ff; }
+  </style>
+</head>
+<body>
+  <!-- HERO -->
+  <div class="hero">
+    <div>
+      <h1>Shadow Data</h1>
+      <p>Find out what Google really knows</p>
+    </div>
+  </div>
+
+  <!-- UPLOAD BOX -->
+  <div class="upload-box">
+    <h2>Upload Your Data</h2>
+    <label for="file" class="upload-btn">Choose File</label>
+    <input type="file" id="file" hidden>
+    <p id="fileName" class="file-name">No file chosen</p>
+  </div>
+
+  <!-- STEPS BOX -->
+  <div class="steps">
+    <h3>How to Export from Google</h3>
+    <ol>
+      <li><div class="number">1</div><span>Go to Google Takeout</span></li>
+      <li><div class="number">2</div><span>Select data categories</span></li>
+      <li><div class="number">3</div><span>Download the .zip file</span></li>
+      <li><div class="number">4</div><span>Upload it here</span></li>
+    </ol>
+  </div>
+
+  <!-- RISK METER -->
+  <div id="riskSection" class="risk-section">
+    <h2>Your Risk Level</h2>
+    <canvas id="speedometer"></canvas>
+    <p id="riskComment" class="risk-comment">Loading...</p>
+  </div>
+
+  <!-- Speedometer Script -->
+  <script>
+    const input = document.getElementById("file");
+    const fileName = document.getElementById("fileName");
+    const riskSection = document.getElementById("riskSection");
+    const riskComment = document.getElementById("riskComment");
+
+    input.addEventListener("change", () => {
+      fileName.textContent = input.files.length > 0 ? input.files[0].name : "No file chosen";
+
+      if (input.files.length > 0) {
+        riskSection.style.display = "block";
+
+        // Generate random risk score
+        const riskScore = Math.floor(Math.random() * 100);
+
+        // Update comment text
+        riskComment.textContent =
+          riskScore <= 25 ? "🕵️ The Ghost" :
+          riskScore <= 50 ? "🙂 The Casual User" :
+          riskScore <= 75 ? "📲 The Over-Sharer" : "📖 The Transparent Soul";
+
+        // Draw Speedometer
+        initSpeedometer(riskScore);
+
+        riskSection.scrollIntoView({ behavior: "smooth" });
+      }
+    });
+
+    function initSpeedometer(percent) {
+      const canvas = document.getElementById('speedometer');
+      const ctx = canvas.getContext('2d');
+      let current = 0;
+
+      function resizeCanvas(){
+        const dpr = window.devicePixelRatio || 1;
+        const cssWidth = canvas.parentElement.clientWidth || 520;
+        const cssHeight = Math.max((cssWidth/2), 220);
+        canvas.style.width = cssWidth + 'px';
+        canvas.style.height = cssHeight + 'px';
+        canvas.width = Math.floor(cssWidth * dpr);
+        canvas.height = Math.floor(cssHeight * dpr);
+        ctx.setTransform(dpr,0,0,dpr,0,0);
+      }
+
+      function draw(p){
+        const w = canvas.clientWidth;
+        const h = canvas.clientHeight;
+        const cx = w/2, cy = h - 8;
+        const radius = Math.min(w/2 - 40, 180);
+
+        ctx.clearRect(0,0,w,h);
+        ctx.lineWidth = 34; 
+        ctx.lineCap = 'round';
+
+        const start = Math.PI, full = Math.PI;
+        const seg1 = start + full * 0.33, seg2 = start + full * 0.66;
+
+        // Glow based on zone
+        if (p <= 33) {
+          ctx.shadowBlur = 25;
+          ctx.shadowColor = 'rgba(22,163,74,0.8)';
+        } else if (p <= 66) {
+          ctx.shadowBlur = 25;
+          ctx.shadowColor = 'rgba(245,158,11,0.8)';
+        } else {
+          ctx.shadowBlur = 25;
+          ctx.shadowColor = 'rgba(239,68,68,0.8)';
+        }
+
+        // arcs
+        ctx.beginPath(); ctx.strokeStyle = '#16a34a'; ctx.arc(cx,cy,radius, start, seg1); ctx.stroke();
+        ctx.beginPath(); ctx.strokeStyle = '#f59e0b'; ctx.arc(cx,cy,radius, seg1, seg2); ctx.stroke();
+        ctx.beginPath(); ctx.strokeStyle = '#ef4444'; ctx.arc(cx,cy,radius, seg2, start+full); ctx.stroke();
+
+        ctx.shadowBlur = 0;
+
+        // center plate
+        ctx.beginPath(); ctx.fillStyle = '#0f1623'; ctx.arc(cx,cy,radius-46,0,2*Math.PI); ctx.fill();
+
+        // needle
+        const angle = Math.PI + (p/100)*Math.PI;
+        const nx = cx + (radius-20) * Math.cos(angle);
+        const ny = cy + (radius-20) * Math.sin(angle);
+        ctx.beginPath(); ctx.lineWidth = 4; ctx.strokeStyle = '#e6edf3'; ctx.moveTo(cx,cy); ctx.lineTo(nx,ny); ctx.stroke();
+        ctx.beginPath(); ctx.fillStyle = '#e6edf3'; ctx.arc(cx,cy,6,0,2*Math.PI); ctx.fill();
+
+        // value text
+        ctx.fillStyle = '#e6edf3';
+        ctx.font = 'bold 20px Roboto, Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText(Math.round(p) + '%', cx, cy + 44);
+      }
+
+      function animateTo(target){
+        const startTime = performance.now();
+        const startVal = current;
+        const duration = 900;
+
+        function tick(now){
+          const t = Math.min(1, (now - startTime)/duration);
+          const ease = t < 0.5 ? 2*t*t : -1 + (4-2*t)*t;
+          current = startVal + (target - startVal)*ease;
+          draw(current);
+          if(t < 1) {
+            requestAnimationFrame(tick);
+          }
+        }
+        requestAnimationFrame(tick);
+      }
+
+      window.addEventListener('resize', ()=>{ resizeCanvas(); draw(current); });
+      resizeCanvas();
+      animateTo(percent);
+    }
+  </script>
+</body>
+</html>
