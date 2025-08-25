@@ -36,7 +36,7 @@
     style="height: 60vh;">
    
     <!-- Background Image (blurred) -->
-    <div class="absolute inset-0 bg-cover bg-center "
+    <div class="absolute inset-0 bg-cover bg-center blur-sm "
       style="background-image: url('https://plus.unsplash.com/premium_photo-1661872817492-fd0c30404d74?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8Y29tcHV0ZXIlMjBzY2llbmNlfGVufDB8fDB8fHww');">
     </div>
    
@@ -88,23 +88,15 @@
   </main>
 {% if filename %}
 <!-- Results -->
-<section class="max-w-6xl mx-auto px-6 py-12 flex flex-col gap-8">
+<!-- Speedometer Section -->
+<section class="bg-gray-900/80 rounded-2xl shadow-lg p-6 text-white border-2 border-blue-400/70 mt-8 neon-blue">
+  <h3 class="font-semibold text-lg text-blue-300 mb-4">📡 Detailed Risk Speedometer</h3>
+  <p class="text-gray-300 mb-4">
+    This speedometer visually shows your privacy risk. The needle moves based on your activity level and exposure.
+  </p>
+<canvas id="speedometer" class="w-full h-64"></canvas>
+</section>
 
-
-  <!-- Risk Meter Box -->
-  <div class="bg-gray-900/80 rounded-2xl shadow-lg p-6 text-white border-2 border-blue-400/70 hover:shadow-[0_0_20px_#06b6d4,0_0_40px_#06b6d4,0_0_80px_#06b6d4] transition-shadow duration-500">
-    <h3 class="font-semibold text-lg text-blue-300 mb-3">📊 Privacy Risk</h3>
-    <div class="w-full bg-gray-700 rounded-full h-6 overflow-hidden">
-      <div class="h-6 flex items-center justify-end pr-2 text-xs text-white font-bold"
-           style="width: {{ risk_percent }}%; background: {{ risk_color }};">
-        {{ risk_percent }}%
-      </div>
-    </div>
-    <p class="mt-2 text-gray-300">
-      <span class="font-semibold" style="color: {{ risk_color }}">Level: {{ risk_level }}</span>
-      <span class="ml-2 italic">{{ risk_comment }}</span>
-    </p>
-  </div>
 
 
   <!-- Personality Box -->
@@ -132,6 +124,8 @@
     <img class="mx-auto rounded-xl shadow" src="{{ url_for('static', filename=chart_url) }}" alt="Activity Chart">
     {% endif %}
   </div>
+
+
 
 
   <!-- Category Counts Box -->
@@ -167,6 +161,124 @@
   <script>
     AOS.init();
   </script>
+
+    <!-- Speedometer: responsive + HiDPI crisp -->
+  <script>
+(function(){
+  const canvas = document.getElementById('speedometer');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const percent = {{ risk_percent if risk_percent is not none else 0 }};
+  let current = 0;
+
+  function resizeCanvas(){
+    const dpr = window.devicePixelRatio || 1;
+    const cssWidth = canvas.parentElement.clientWidth || 520;
+    const cssHeight = Math.max(cssWidth/2, 220);
+    canvas.style.width = cssWidth + 'px';
+    canvas.style.height = cssHeight + 'px';
+    canvas.width = Math.floor(cssWidth * dpr);
+    canvas.height = Math.floor(cssHeight * dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+  }
+
+  function draw(p){
+    const w = canvas.clientWidth;
+    const h = canvas.clientHeight;
+    const cx = w/2, cy = h - 8;
+    const radius = Math.min(w/2 - 40, 180);
+
+    ctx.clearRect(0,0,w,h);
+
+    // Draw base arc (semi-transparent dark)
+    ctx.beginPath();
+    ctx.lineWidth = 34;
+    ctx.strokeStyle = '#333';
+    ctx.arc(cx, cy, radius, Math.PI, 2*Math.PI);
+    ctx.stroke();
+
+    // Draw colored gradient arc
+    const gradient = ctx.createLinearGradient(cx-radius, cy, cx+radius, cy);
+    gradient.addColorStop(0, '#16a34a'); // green
+    gradient.addColorStop(0.33, '#16a34a');
+    gradient.addColorStop(0.34, '#f59e0b'); // yellow
+    gradient.addColorStop(0.66, '#f59e0b');
+    gradient.addColorStop(0.67, '#ef4444'); // red
+    gradient.addColorStop(1, '#ef4444');
+
+    ctx.beginPath();
+    ctx.lineWidth = 34;
+    ctx.strokeStyle = gradient;
+    ctx.arc(cx, cy, radius, Math.PI, 2*Math.PI);
+    ctx.stroke();
+
+    // Tick marks & labels
+    const ticks = [0, 25, 50, 75, 100];
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = '#e6edf3';
+    ctx.fillStyle = '#e6edf3';
+    ctx.font = 'bold 14px Roboto, Arial';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ticks.forEach(t=>{
+      const angle = Math.PI + (t/100)*Math.PI;
+      const x1 = cx + (radius-10)*Math.cos(angle);
+      const y1 = cy + (radius-10)*Math.sin(angle);
+      const x2 = cx + radius * Math.cos(angle);
+      const y2 = cy + radius * Math.sin(angle);
+      ctx.beginPath();
+      ctx.moveTo(x1,y1);
+      ctx.lineTo(x2,y2);
+      ctx.stroke();
+      const lx = cx + (radius+20) * Math.cos(angle);
+      const ly = cy + (radius+20) * Math.sin(angle);
+      ctx.fillText(t + '%', lx, ly);
+    });
+
+    // Needle
+    const angle = Math.PI + (p/100)*Math.PI;
+    const nx = cx + (radius-20) * Math.cos(angle);
+    const ny = cy + (radius-20) * Math.sin(angle);
+    ctx.beginPath();
+    ctx.lineWidth = 4;
+    ctx.strokeStyle = '#e6edf3';
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(nx, ny);
+    ctx.stroke();
+
+    // Needle center
+    ctx.beginPath();
+    ctx.fillStyle = '#e6edf3';
+    ctx.arc(cx, cy, 6, 0, 2*Math.PI);
+    ctx.fill();
+
+    // Digital display
+    ctx.fillStyle = '#e6edf3';
+    ctx.font = 'bold 28px Roboto, Arial';
+    ctx.fillText(Math.round(p) + '%', cx, cy + 44);
+  }
+
+  function animateTo(target){
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if(prefersReduced){ draw(target); return; }
+    const startTime = performance.now();
+    const startVal = current;
+    const duration = 900;
+    function tick(now){
+      const t = Math.min(1, (now - startTime)/duration);
+      const ease = t < 0.5 ? 2*t*t : -1 + (4-2*t)*t;
+      current = startVal + (target - startVal)*ease;
+      draw(current);
+      if(t < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  window.addEventListener('resize', ()=>{ resizeCanvas(); draw(current); });
+  resizeCanvas();
+  animateTo(percent);
+})();
+</script>
 </body>
 
 </html>
