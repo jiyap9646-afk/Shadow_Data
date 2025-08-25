@@ -69,9 +69,10 @@ def calculate_risk(categories, recent_activities=None):
 
 
     }
-#For each category of activity, take its weight (importance) and multiply by a scaled version of how many times the user did that activity. Then add up all categories to get a single “base risk” number.
     base_risk = sum(weights.get(cat, 1) * math.log(1 + count)
                     for cat, count in categories.items())
+
+                    
    
  #This code calculates extra risk from recent activity, giving more weight to activities done recently. Then it adds this to the base category risk and converts the total into a percentage between 0 and 100 that represents the user’s overall data exposure.
     recent_risk = 0
@@ -250,6 +251,10 @@ def analyze_file(filepath: str):
 @app.route("/", methods=["GET"])
 def index():
     return render_template("index.html")
+
+@app.route("/awareness")
+def awareness():
+    return render_template("awareness.html")
 
 
 

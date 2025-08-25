@@ -1,146 +1,179 @@
-def analyze_plain_text(filepath: str):
-    """
-    Fallback for .txt or unknown formats: just count simple keywords in the file body.
-    """
-    categories = {"Search": 0, "YouTube": 0, "Maps": 0, "Shopping": 0, "Discover": 0, "Other": 0}
-    times = []
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Shadow Data | Awareness</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 
-    with open(filepath, "r", encoding="utf-8", errors="ignore") as f:
-        txt = clean_text(f.read())
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Courier New', monospace;
+      color: #e5e5e5;
 
 
-    if not txt.strip():
-        categories["Other"] = 1
-        return categories, times
-
-
-    # reuse same buckets
-    buckets = {
-        "Search": [r"\bsearch\b", r"\bgoogle search\b", r"\bquery\b"],
-        "YouTube": [r"\byoutube\b", r"\bwatch\b", r"\bvideo\b"],
-        "Maps": [r"\bmaps\b", r"\bnavigate\b", r"\bdirection\b", r"\bplace\b"],
-        "Shopping": [r"\bshopping\b", r"\bproduct\b", r"\bbuy\b", r"\border\b"],
-        "Discover": [r"\bdiscover\b", r"\brecommended\b", r"\bfor you\b"]
+      /* Background image with blur effect */
+      background:
+        linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.75)),
+        url("https://plus.unsplash.com/premium_photo-1661872817492-fd0c30404d74?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8Y29tcHV0ZXIlMjBzY2llbmNlfGVufDB8fDB8fHww");
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
     }
-    for cat, patterns in buckets.items():
-        for p in patterns:
-            categories[cat] += len(re.findall(p, txt))
 
 
-    if sum(categories.values()) == 0:
-        categories["Other"] = 1
+    /* Blur overlay */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      backdrop-filter: blur(6px);
+      z-index: -1;
+    }
 
 
-    return categories, times
+    header {
+      text-align: center;
+      padding: 3.5rem 1rem;
+    }
+    header h1 {
+      font-size: 4rem;
+      font-weight: 900;
+      color: orange; /* plain orange */
+    }
+    .section {
+      background: rgba(20, 20, 40, 0.55);
+      padding: 2rem;
+      margin: 2rem auto;
+      border-radius: 12px;
+      max-width: 900px;
+      box-shadow: 0 0 15px rgba(0, 170, 255, 0.2);
+      backdrop-filter: blur(10px);
+    }
+    .section h2 {
+      color: #33bbee;
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+    .lawsuits li {
+      margin: 10px 0;
+      padding: 10px;
+      background: rgba(0, 40, 80, 0.5);
+      border-left: 4px solid #3399ff;
+      border-radius: 6px;
+      backdrop-filter: blur(6px);
+    }
+    .faq {
+      margin: 1rem 0;
+      padding: 1rem;
+      border-left: 4px solid #33bbee;
+      background: rgba(0, 50, 80, 0.5);
+      border-radius: 6px;
+      backdrop-filter: blur(6px);
+    }
+    footer {
+      text-align: center;
+      padding: 2rem;
+      margin-top: 2rem;
+      background: rgba(10, 10, 25, 0.7);
+      border-top: 2px solid orange;
+      backdrop-filter: blur(8px);
+    }
+    footer .text-xl,
+    footer p {
+      color: orange; /* footer text is now orange */
+    }
+  </style>
+</head>
+<body>
 
 
-def analyze_file(filepath: str):
-    """
-    Router: decide which analyzer based on extension/content.
-    """
-    ext = os.path.splitext(filepath)[1].lower()
-    if ext in (".html", ".htm"):
-        return analyze_html_takeout(filepath)
-    else:
-        return analyze_plain_text(filepath)
+  <!-- Header -->
+  <header>
+    <h1>Shadow Data Awareness</h1>
+    <p class="italic text-gray-300">"They watch. They record. They never forget."</p>
+  </header>
 
 
-# ---------- Routes ----------
-@app.route("/", methods=["GET"])
-def index():
-    return render_template("index.html")
+  <!-- Google Tracking Info -->
+  <div class="section">
+    <h2>How Google Tracks Your Every Move</h2>
+    <p>
+      Google has built an invisible surveillance empire. Every product you use feeds them more data:
+    </p>
+    <ul class="mt-3 list-disc ml-6 space-y-2">
+      <li><b>Location Tracking:</b> Even with "Location History" off, your GPS, Wi-Fi, and even photos are logged.</li>
+      <li><b>Search & Browsing:</b> Every query, click, and website visit — stored forever to profile your mind.</li>
+      <li><b>Android Phones:</b> Your device constantly whispers: app usage, battery status, idle data, background mic activation.</li>
+      <li><b>YouTube:</b> Every video you watch builds a psychological profile of your interests, habits, and moods.</li>
+      <li><b>Gmail:</b> Scans your messages and even drafts to build ad-targeting dossiers.</li>
+      <li><b>Voice Assistants:</b> “OK Google” listens for commands — but researchers found snippets of private conversations stored.</li>
+      <li><b>Ads & Cookies:</b> Hidden trackers follow you across millions of websites — even outside Google platforms.</li>
+    </ul>
+    <p class="mt-4 text-blue-400 font-bold">
+      You are not the customer. You are the product. Every step, every click, every whisper — monetized.
+    </p>
+  </div>
 
 
-@app.route("/upload", methods=["POST"])
-def upload_file():
-    try:
-        # Check if file part exists
-        if "file" not in request.files:
-            return "No file part", 400
+  <!-- Lawsuits -->
+  <div class="section">
+    <h2>Google’s Darkest Lawsuits</h2>
+    <ul class="lawsuits">
+      <li><b>Incognito Mode Case (2020):</b> Google sued for secretly tracking users in private browsing.</li>
+      <li><b>Location Tracking Lawsuit (2022):</b> U.S. states accused Google of lying about stopping location tracking.</li>
+      <li><b>Antitrust Case (2023):</b> U.S. Justice Dept. sued Google for monopolizing search & ads market.</li>
+      <li><b>EU Fines (2017-2019):</b> Over <span class="text-blue-400">€8 billion</span> in fines for abusing dominance & violating user privacy.</li>
+      <li><b>Children’s Data Violation (YouTube, 2019):</b> Google fined for illegally collecting kids’ personal data.</li>
+    </ul>
+    <p class="mt-4 italic text-gray-300">Even billion-dollar penalties couldn’t stop the hunger for your data.</p>
+  </div>
 
 
-        file = request.files["file"]
+  <!-- FAQ Section -->
+  <div class="section">
+    <h2>FAQs – Why Our Page Helps You</h2>
 
 
-        # Check if filename is empty
-        if not file.filename:
-            return "No selected file", 400
+    <div class="faq">
+      <p><b>How does this page help me?</b></p>
+      <p>✅ It creates awareness by exposing how Google secretly collects your data and what risks you face daily.</p>
+    </div>
 
 
-        # Assert filename is not None for Pylance
-        assert file.filename is not None
-        filename: str = file.filename
+    <div class="faq">
+      <p><b>Is my data safe if I use this project?</b></p>
+      <p>✅ Yes. Unlike Google, we don’t store your data. Everything runs securely on your device or session only.</p>
+    </div>
 
 
-        # Ensure upload folder exists
-        upload_folder: Path = Path(app.config["UPLOAD_FOLDER"])
-        upload_folder.mkdir(exist_ok=True)
+    <div class="faq">
+      <p><b>Why should I trust this project?</b></p>
+      <p>✅ Transparency. We show exactly what data Google has on you without keeping a copy — your privacy stays yours.</p>
+    </div>
 
 
-        # Full path for saving file
-        filepath: Path = upload_folder / filename
+    <div class="faq">
+      <p><b>How is this useful in real life?</b></p>
+      <p>✅ It empowers you to <span class="text-blue-400">take back control</span>, change risky settings, and limit unnecessary data leaks.</p>
+    </div>
+  </div>
 
 
-        # Save the uploaded file
-        file.save(filepath)
-        # --- Analyze uploaded file ---
-        categories, activity_times = analyze_file(str(filepath))
+  <!-- Footer -->
+  <footer>
+    <p class="text-xl"><span class="font-bold">Your privacy is your power.</span></p>
+    <p class="mt-2">Be aware. Stay safe. Protect your shadow.</p>
+  </footer>
 
 
-        # --- Risk Meter, Comments, Personality ---
-        risk_level, risk_color, risk_message, risk_suggestions, risk_percent = calculate_risk(
-            categories, recent_activities=activity_times
-        )
-        risk_comment = get_risk_comment(risk_percent)
-        personality = get_personality_type(risk_percent)
-
-
-        # --- Pie Chart ---
-        filtered = {k: v for k, v in categories.items() if v > 0}
-        if not filtered:
-            filtered = {"Other": 1}
-
-
-        plt.figure(figsize=(6, 6))
-        plt.pie(list(filtered.values()),
-                labels=list(filtered.keys()),
-                autopct='%1.1f%%',
-                startangle=90)
-        plt.title('Activity Breakdown')
-        chart_name = 'activity_chart.png'
-        plt.savefig(os.path.join(STATIC_FOLDER, chart_name), bbox_inches="tight")
-        plt.close()
-
-
-        # --- Render template with results ---
-     
-        return render_template(
-        "index.html",
-        filename=filename,
-        categories=categories,
-        chart_url=chart_name,
-        risk_level=risk_level,
-        risk_color=risk_color,
-        suggestion=risk_message,
-        risk_suggestions=risk_suggestions,
-        risk_percent=risk_percent,
-        risk_comment=risk_comment,
-        personality=personality
-    )
-
-
-    except Exception as e:
-        import traceback
-        traceback.print_exc()
-        return f"Internal Server Error: {e}"
-
-
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=3000, debug=True)
-
-
-
-
+</body>
+</html>
 
 
