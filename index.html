@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Shadow Data</title>
+  <style>
+    body
+     {
+      font-family: Arial, sans-serif;
+      background: #101820;
+      color: white;
+      margin: 0;
+      text-align: center;
+    }
+    .hero {
+      background: #1a2735;
+      padding: 40px;
+    }
+    .hero h1 {
+      margin: 0;
+      font-size: 2.5rem;
+    }
+    .upload-box {
+      margin: 30px auto;
+      padding: 20px;
+      width: 300px;
+      border: 2px dashed #555;
+    }
+    .upload-box input {
+      margin-top: 10px;
+    }
+    .steps {
+      background: #18222e;
+      padding: 20px;
+      margin: 20px auto;
+      width: 350px;
+      text-align: left;
+    }
+    .results {
+      background: #222c38;
+      margin: 20px auto;
+      padding: 20px;
+      width: 350px;
+    }
+    .risk {
+      color: #ff6b6b;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="hero">
+    <h1>Shadow Data</h1>
+    <p>Find out what Google really knows</p>
+  </div>
+
+  <div class="upload-box">
+    <h2>Upload File</h2>
+    <input type="file" id="file"><br>
+    <span id="fileName">No file chosen</span>
+  </div>
+
+  <div class="steps">
+    <h3>Steps to Export</h3>
+    <ol>
+      <li>Go to Google Takeout</li>
+      <li>Select data categories</li>
+      <li>Download .zip file</li>
+      <li>Upload here</li>
+    </ol>
+  </div>
+
+  <div class="results">
+    <h3>Results</h3>
+    <p class="risk">⚠️ Risk Level: High (78%)</p>
+    <p>Category: Location History</p>
+  </div>
+
+  <script>
+    // show chosen filename
+    const input = document.getElementById("file");
+    const fileName = document.getElementById("fileName");
+
+    input.addEventListener("change", () => {
+      if(input.files.length > 0){
+        fileName.textContent = input.files[0].name;
+      } else {
+        fileName.textContent = "No file chosen";
+      }
+    });
+  </script>
+
+</body>
+</html>
